@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+      canvas {
+        border: 1px solid #9C9898;
+      }
+    </style>
+    <script src="kinetic-v3.js"></script>
+    <script>
+      function loadImages(sources, callback) {
+        var images = {};
+        var loadedImages = 0;
+        var numImages = 0;
+        for(var src in sources) {
+          numImages++;
+        }
+        for(var src in sources) {
+          images[src] = new Image();
+          images[src].onload = function() {
+            if(++loadedImages >= numImages) {
+              callback(images);
+            }
+          };
+          images[src].src = sources[src];
+        }
+      }
+      function initStage(images) {
+        var stage = new Kinetic.Stage({
+          container: "container",
+          width: 1000,
+          height: 590
+        });
+        var image_scanGroup = new Kinetic.Group({
+          x: 270,
+          y: 120,
+          draggable: true
+        });
+
+        var image_maskGroup = new Kinetic.Group({
+          x: 250,
+          y: 0,
+          draggable: true
+        });
+        var layer = new Kinetic.Layer();
+
+        layer.add(image_scanGroup);
+        layer.add(image_maskGroup);
+        stage.add(layer);
+
+        var image_scanImg = new Kinetic.Image({
+          x: 0,
+          y: 0,
+          image: images.image_scan,
+          width: 576,
+          height: 576,
+          name: "image"
+        });
+
+        image_scanGroup.add(image_scanImg);
+
+        var image_maskImg = new Kinetic.Image({
+          x: 0,
+          y: 0,
+          image: images.image_mask,
+          width: 576,
+          height: 576,
+          name: "image"
+        });
+
+        image_maskGroup.add(image_maskImg);
+
+        stage.draw();
+      }
+
+      window.onload = function() {
+        var sources = {
+          image_scan: "amiga_scan.png",
+          image_mask: "amiga_mask.png"
+        };
+        loadImages(sources, initStage);
+      };
+
+    </script>
+  </head>
+  <body onmousedown="return false;">
+<b>Scanimation en HTML5</b><br/>
+D&eacute;placer lentement l'image-masque avec la souris.
+    <div id="container">
+        <div class="kineticjs-content" style="position: relative; display: inline-block; width: 1000px; height: 590px; margin-left: -579px;margin-top: -590px">
+            <canvas height="590" width="1000" class="kineticjs-buffer-layer" style="position: absolute; display: none;"> </canvas>
+            <canvas height="590" width="1000" class="kineticjs-path-layer" style="position: absolute; display: none;"> </canvas>
+        </div>
+    </div>
+</body>
+</html>
